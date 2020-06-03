@@ -22,17 +22,17 @@ namespace PZ_RG.Service
         private bool rotating;
 
         Window window;
-        PerspectiveCamera camera;
+
         Viewport3D viewport;
         ScaleTransform3D scale;
         TranslateTransform3D translate;
         AxisAngleRotation3D rotateX;
         AxisAngleRotation3D rotateY;
-        public CameraService(PerspectiveCamera camera , Viewport3D viewport,ScaleTransform3D scale, TranslateTransform3D translate, AxisAngleRotation3D rotateX, AxisAngleRotation3D rotateY, Window window)
+        public CameraService( Viewport3D viewport,ScaleTransform3D scale, TranslateTransform3D translate, AxisAngleRotation3D rotateX, AxisAngleRotation3D rotateY, Window window)
         {
             this.viewport = viewport;
             this.window = window;
-            this.camera = camera;
+
             this.scale = scale;
           this. translate = translate;
             rotationDelta = Quaternion.Identity;
@@ -105,9 +105,15 @@ namespace PZ_RG.Service
                 {
                     var angleY = (rotateY.Angle + -translateX) % 360;
                     var angleX = (rotateX.Angle + translateY) % 360;
-                     rotateY.Angle = angleY;
-                rotateX.Angle = angleX;
-                  
+                    if (-80 < angleY && angleY <80)
+                    {
+                        rotateY.Angle = angleY;
+                    }
+                    if (-20 < angleX && angleX < 135)
+                    {
+                        rotateX.Angle = angleX;
+                    }
+
                     start = end;
 
                 }

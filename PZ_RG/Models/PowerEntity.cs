@@ -27,9 +27,9 @@ namespace RG_PZ2.Models
         {
      
         }
-        virtual  public  void SetDefaultColor()
+        virtual  public Brush SetDefaultColor()
         {
-            
+            return Brushes.White;
         }
     }
 }

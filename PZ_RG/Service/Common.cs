@@ -20,10 +20,10 @@ namespace PZ_RG.Service
         public const double MAX_LAT = 45.277031;
         public const double MAX_LON = 19.894459;
 
-        public static  List<SubstationEntity> substationEntities = new List<SubstationEntity>();
-        public static List<NodeEntity> nodeEntities = new List<NodeEntity>();
-        public static List<SwitchEntity> switchEntities = new List<SwitchEntity>();
-        public static List<LineEntity> lineEntities = new List<LineEntity>();
+        public static Dictionary<long, SubstationEntity> substationEntities = new Dictionary<long, SubstationEntity>();
+        public static Dictionary<long, NodeEntity> nodeEntities = new Dictionary<long, NodeEntity>();
+        public static Dictionary<long, SwitchEntity> switchEntities = new Dictionary<long, SwitchEntity>();
+        public static Dictionary<long, LineEntity> lineEntities = new Dictionary<long, LineEntity>();
         private static double ScaleY;
         private static double ScaleX;
 
@@ -31,8 +31,8 @@ namespace PZ_RG.Service
 
         public static void LoadModels()
         {
-            ScaleX = 10 / (MAX_LON + MIN_LON);
-            ScaleY = 10 / (MAX_LAT + MIN_LAT);
+            ScaleX = (MAX_LON - MIN_LON)/10;
+            ScaleY = (MAX_LAT - MIN_LAT)/10;
 
             var doc = new XmlDocument();
             doc.Load("Geographic.xml");
@@ -42,25 +42,43 @@ namespace PZ_RG.Service
             AddLineEntities(lineEntities, doc.DocumentElement.SelectNodes("/NetworkModel/Lines/LineEntity"));
            
         }
+        public static void CreateElement(Model3DGroup model3DGroup)
+        {
+            foreach(var item in substationEntities.Values)
+            {
+               // Object3DService.Create3Delement(item, model3DGroup);
+                model3DGroup.Children.Add(Object3DService.Create3Delement(item, model3DGroup));
+            }
+            foreach (var item in nodeEntities.Values)
+            {
+                // Object3DService.Create3Delement(item, model3DGroup);
+                model3DGroup.Children.Add(Object3DService.Create3Delement(item, model3DGroup));
+            }
+            foreach (var item in switchEntities.Values)
+            {
+                // Object3DService.Create3Delement(item, model3DGroup);
+                model3DGroup.Children.Add(Object3DService.Create3Delement(item, model3DGroup));
+            }
+        }
          public static void ConverLatLon()
         {
-            foreach (var sub in substationEntities)
+            foreach (var sub in substationEntities.Values)
             {
                 sub.Y = Convert(sub.Y, MIN_LAT, ScaleY);
                 sub.X = Convert(sub.X, MIN_LON, ScaleX);
             }
-            foreach (var node in nodeEntities)
+            foreach (var node in nodeEntities.Values)
             {
                 node.Y = Convert(node.Y, MIN_LAT, ScaleY);
                 node.X = Convert(node.X, MIN_LON, ScaleX);
             }
    
-            foreach (var swc in switchEntities)
+            foreach (var swc in switchEntities.Values)
             {
                 swc.Y = Convert(swc.Y, MIN_LAT, ScaleY);
                 swc.X = Convert(swc.X, MIN_LON, ScaleX);
             }
-            foreach (var line in lineEntities)
+            foreach (var line in lineEntities.Values)
             {
                 for( int i =0; i< line.Vertices.Count;i++)
                 {
@@ -70,14 +88,15 @@ namespace PZ_RG.Service
             }
 
         }
+
         
-        public static void AddEntities<T>(List<T> entities, XmlNodeList nodeList) where T : PowerEntity, new()
+        public static void AddEntities<T>(Dictionary<long,T> entities, XmlNodeList nodeList) where T : PowerEntity, new()
         {
             foreach (XmlNode item in nodeList)
             {
-                ToLatLon(double.Parse(item.SelectSingleNode("X").InnerText, CultureInfo.InvariantCulture), double.Parse(item.SelectSingleNode("Y").InnerText, CultureInfo.InvariantCulture), 34, out var x, out var y);
+                ToLatLon(double.Parse(item.SelectSingleNode("X").InnerText, CultureInfo.InvariantCulture), double.Parse(item.SelectSingleNode("Y").InnerText, CultureInfo.InvariantCulture), 34, out var y, out var x);
 
-                if (!(MIN_LAT <= x && x <= MAX_LAT) || !(MIN_LON <= y && y <= MAX_LON))
+                if (!(MIN_LAT <= y && y <= MAX_LAT) || !(MIN_LON <= x && x <= MAX_LON))
                 {
                     continue;
                 }
@@ -93,11 +112,11 @@ namespace PZ_RG.Service
                 {
                     (entity as SwitchEntity).Status = item.SelectSingleNode("Status").InnerText;
                 }
-                entities.Add(entity);
+                entities.Add(entity.Id,entity);
             }
         }
 
-        public static void AddLineEntities(List<LineEntity> entites, XmlNodeList nodeList)
+        public static void AddLineEntities(Dictionary<long,LineEntity> entites, XmlNodeList nodeList)
         {
             foreach (XmlNode item in nodeList)
             {
@@ -119,8 +138,9 @@ namespace PZ_RG.Service
 
                 foreach (XmlNode point in item.SelectSingleNode("Vertices"))
                 {
-                    ToLatLon(double.Parse(point.SelectSingleNode("X").InnerText, CultureInfo.InvariantCulture), double.Parse(point.SelectSingleNode("Y").InnerText, CultureInfo.InvariantCulture), 34, out var x, out var y);
-                    if (!(MIN_LAT <= x && x <= MAX_LAT) || !(MIN_LON <= y && y <= MAX_LON))
+                    ToLatLon(double.Parse(point.SelectSingleNode("X").InnerText, CultureInfo.InvariantCulture), double.Parse(point.SelectSingleNode("Y").InnerText, CultureInfo.InvariantCulture), 34, out var y, out var x);
+
+                    if (!(MIN_LAT <= y && y <= MAX_LAT) || !(MIN_LON <= x && x <= MAX_LON))
                     {
                         continue;
                     }
@@ -133,13 +153,13 @@ namespace PZ_RG.Service
 
                 }
 
-                entites.Add(line);
+                entites.Add(line.Id,line);
             }
         }
 
-        public static double Convert(double coordinate, double minLat, double scale)
+        public static double Convert(double coordinate, double minLatLon, double scale)
         {
-            return (coordinate - minLat) * scale;
+            return Math.Abs( (coordinate - minLatLon) /scale);
         }
 
         public static void ToLatLon(double utmX, double utmY, int zoneUTM, out double latitude, out double longitude)

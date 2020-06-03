@@ -13,9 +13,9 @@ namespace RG_PZ2.Models
         {
             
         }
-        public override void SetDefaultColor()
+        public override Brush SetDefaultColor()
         {
-           
+            return Brushes.Lime;
         }
 
 

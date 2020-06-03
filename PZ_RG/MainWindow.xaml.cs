@@ -26,9 +26,10 @@ namespace PZ_RG
         public MainWindow()
         {
             InitializeComponent();
-            cameraService = new CameraService(camera,mainViewport,scale,translate,rotateX,rotateY,this);
+            cameraService = new CameraService(mainViewport,scale,translate,rotateX,rotateY,this);
             Common.LoadModels();
             Common.ConverLatLon();
+            Common.CreateElement(model3DGroup);
 
         }
 

@@ -9,9 +9,9 @@ namespace RG_PZ2.Models
 {
     class SubstationEntity : PowerEntity
     {
-        public override void SetDefaultColor()
+        public override Brush SetDefaultColor()
         {
- 
+            return Brushes.Red;
         }
     }
 }

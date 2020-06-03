@@ -10,9 +10,9 @@ namespace RG_PZ2.Models
     class SwitchEntity:PowerEntity
     {
         public string Status { get; set; }
-        public override void SetDefaultColor()
+        public override Brush SetDefaultColor()
         {
-            
+            return Brushes.DeepSkyBlue;
         }
     }
 }

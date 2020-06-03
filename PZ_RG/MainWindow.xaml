@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PZ_RG"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Background="Beige">
           <ScrollViewer  Name="scrollViewer" HorizontalScrollBarVisibility="Hidden"  VerticalScrollBarVisibility="Hidden">
             
             <Viewport3D Name="mainViewport" ClipToBounds="True" Height="700" Width="1000" >
@@ -20,44 +20,30 @@
                 <ModelVisual3D x:Name="MyModel">
                     <ModelVisual3D.Transform>
                         <Transform3DGroup>
-                      
-
-                                    <ScaleTransform3D x:Name="scale"  ScaleX="1" ScaleY="1" ScaleZ="1" />
-                            
-                                              <!--rotacije po x i po y-->
-
-                                        <RotateTransform3D
-                                     CenterX="5"
-                                     CenterY="5"
-                                     CenterZ="0">
+                            <ScaleTransform3D x:Name="scale"  ScaleX="1" ScaleY="1" ScaleZ="1" />
+                            <!--rotacije po x i po y-->
+                                        <RotateTransform3D CenterX="5" CenterY="5" CenterZ="0">
                                             <RotateTransform3D.Rotation>
                                                 <AxisAngleRotation3D x:Name="rotateY" Axis="0,1,0" />
                                             </RotateTransform3D.Rotation>
                                         </RotateTransform3D>
                             
-                                        <RotateTransform3D
-                                     CenterX="5"
-                                     CenterY="5"
-                                     CenterZ="0">
+                                        <RotateTransform3D CenterX="5" CenterY="5" CenterZ="0">
                                             <RotateTransform3D.Rotation>
                                              <AxisAngleRotation3D x:Name="rotateX" Axis="1,0,0" />
-                                        </RotateTransform3D.Rotation>
-                                    </RotateTransform3D>
-
-
-                            <TranslateTransform3D x:Name="translate" OffsetX="0" OffsetY="0" OffsetZ="0" />
+                                          </RotateTransform3D.Rotation>
+                                        </RotateTransform3D>
+                        <TranslateTransform3D x:Name="translate" OffsetX="0" OffsetY="0" OffsetZ="0" />
 
                         </Transform3DGroup>
                     </ModelVisual3D.Transform>
 
                     <ModelVisual3D.Content>
-                        <Model3DGroup>
-                            <Model3DGroup.Children>
+                        <Model3DGroup x:Name="model3DGroup">
+                            
                                 <!-- svetlo -->
-                                <AmbientLight/>
-
-
-                                <!--- Definisanje 3D objekta i materijala -->
+                                <AmbientLight Color="White"/>
+                                <!--- modeli-->
                                 <GeometryModel3D x:Name="geometryModel">
                                     <GeometryModel3D.Geometry>
                                         <MeshGeometry3D x:Name = "meshMain"
@@ -68,7 +54,7 @@
                                     </GeometryModel3D.Geometry>
 
                                     <GeometryModel3D.Material>
-                                        <!--slika, tj tekstura kao -->
+                                        <!--slika, tj tekstura kao za pozadinu -->
                                         <DiffuseMaterial>
                                             <DiffuseMaterial.Brush>
                                                 <ImageBrush ImageSource="PZ3 - map.jpg"/>
@@ -77,14 +63,14 @@
                                     </GeometryModel3D.Material>
 
                                 </GeometryModel3D>
-
+                            <!-- pozadina-->
                                 <GeometryModel3D>
                                     <GeometryModel3D.Geometry>
                                         <MeshGeometry3D x:Name = "meshBack"
                                          Positions = "0,0,0 10,0,0 10,10,0 0,10,0"  
                                         TriangleIndices = "1,0,3 3,2,1">
                                         </MeshGeometry3D>
-                                    </GeometryModel3D.Geometry>
+                                    </GeometryModel3D.Geometry> 
 
                                     <GeometryModel3D.Material>
                                         <DiffuseMaterial>
@@ -95,7 +81,7 @@
                                     </GeometryModel3D.Material>
                                 </GeometryModel3D>
 
-                            </Model3DGroup.Children>
+                          
                         </Model3DGroup>
 
                     </ModelVisual3D.Content>
