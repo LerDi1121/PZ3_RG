@@ -13,7 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+//Selenic Branislav PR132/2016
+//korisceni modeli za pz2
 namespace PZ_RG
 {
     /// <summary>
@@ -26,6 +27,8 @@ namespace PZ_RG
         {
             InitializeComponent();
             cameraService = new CameraService(camera,mainViewport,scale,translate,rotateX,rotateY,this);
+            Common.LoadModels();
+            Common.ConverLatLon();
 
         }
 

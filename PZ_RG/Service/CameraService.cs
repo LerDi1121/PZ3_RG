@@ -105,14 +105,9 @@ namespace PZ_RG.Service
                 {
                     var angleY = (rotateY.Angle + -translateX) % 360;
                     var angleX = (rotateX.Angle + translateY) % 360;
-                  //  if (-65 < angleY && angleY < 65)
-                   // {
-                        rotateY.Angle = angleY;
-                    //}
-                   // if (-65 < angleX && angleX < 65)
-                   // {
-                        rotateX.Angle = angleX;
-                   // }
+                     rotateY.Angle = angleY;
+                rotateX.Angle = angleX;
+                  
                     start = end;
 
                 }

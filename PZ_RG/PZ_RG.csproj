@@ -55,7 +55,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\LineEntity.cs" />
+    <Compile Include="Models\NodeEntity.cs" />
+    <Compile Include="Models\PowerEntity.cs" />
+    <Compile Include="Models\SubstationEntity.cs" />
+    <Compile Include="Models\SwitchEntity.cs" />
     <Compile Include="Service\CameraService.cs" />
+    <Compile Include="Service\Common.cs" />
+    <Compile Include="Service\XMLService.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

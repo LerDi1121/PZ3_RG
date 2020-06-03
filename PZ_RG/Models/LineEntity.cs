@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 
 namespace RG_PZ2.Models
 {
@@ -31,6 +32,6 @@ namespace RG_PZ2.Models
 
         public long SecondEnd { get; set; }
 
-        public List<Point> Vertices { get; set; }
+        public List<Point3D> Vertices { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace RG_PZ2.Models
         public string Status { get; set; }
         public override void SetDefaultColor()
         {
-            shape.Fill = Brushes.ForestGreen;
+            
         }
     }
 }

@@ -11,7 +11,7 @@ namespace RG_PZ2.Models
     {
         public override void SetDefaultColor()
         {
-            shape.Fill = Brushes.HotPink;
+ 
         }
     }
 }
