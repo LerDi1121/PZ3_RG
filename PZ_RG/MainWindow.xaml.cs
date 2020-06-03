@@ -25,7 +25,7 @@ namespace PZ_RG
         public MainWindow()
         {
             InitializeComponent();
-            cameraService = new CameraService(camera,mainViewport,scale,translate,this);
+            cameraService = new CameraService(camera,mainViewport,scale,translate,rotateX,rotateY,this);
 
         }
 

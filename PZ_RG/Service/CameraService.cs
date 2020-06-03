@@ -26,7 +26,9 @@ namespace PZ_RG.Service
         Viewport3D viewport;
         ScaleTransform3D scale;
         TranslateTransform3D translate;
-        public CameraService(PerspectiveCamera camera , Viewport3D viewport,ScaleTransform3D scale, TranslateTransform3D translate, Window window)
+        AxisAngleRotation3D rotateX;
+        AxisAngleRotation3D rotateY;
+        public CameraService(PerspectiveCamera camera , Viewport3D viewport,ScaleTransform3D scale, TranslateTransform3D translate, AxisAngleRotation3D rotateX, AxisAngleRotation3D rotateY, Window window)
         {
             this.viewport = viewport;
             this.window = window;
@@ -34,7 +36,9 @@ namespace PZ_RG.Service
             this.scale = scale;
           this. translate = translate;
             rotationDelta = Quaternion.Identity;
-            rotation = new Quaternion(0, 0, 0, 1);
+            this.rotateX = rotateX;
+            this.rotateY = rotateY;
+            this.rotation = new Quaternion(0, 0, 0, 1);
             init();
         }
         void init()
@@ -89,52 +93,32 @@ namespace PZ_RG.Service
         {
             if (viewport.IsMouseCaptured)
             {
+                Point end = e.GetPosition(window);
+                double offsetX = end.X - start.X;
+                double offsetY = end.Y - start.Y;
+                double w = window.Width;
+                double h = window.Height;
+                double translateX = (offsetX * 100) / w;
+                double translateY = -(offsetY * 100) / h;
                 var q = rotation;
                 if (rotating)
                 {
-                   // viewport.RotateGesture= new 
-                    var el = (UIElement)sender;
-                    var delta = start - e.MouseDevice.GetPosition(el);
-                    var mouse = new Vector3D(delta.X, -delta.Y, 0);
-                    var cros = Vector3D.CrossProduct(mouse, new Vector3D(0, 0, 1));
-                    var len = cros.Length;
-                    if(len<1)
-                    {
-                        rotationDelta = new Quaternion(new Vector3D(0, 0, 1), 0);
-                    }
-                    else
-                    {
-                        rotationDelta = new Quaternion(cros, len);
-                    }
-                       // rotationDelta = new Quaternion(cros, len);
-               
-                      q = rotationDelta * rotation;
-                    var mv = viewport.Children[0];
-                    var t3Dg = mv.Transform as Transform3DGroup;
-                    var groupScaleTransform = t3Dg.Children[0] as ScaleTransform3D;
-                    var groupRotateTransform = t3Dg.Children[1] as RotateTransform3D;
-                    var groupTranslateTransform = t3Dg.Children[2] as TranslateTransform3D;
-                    //   groupScaleTransform.ScaleX = s;
-                    //  groupScaleTransform.ScaleY = s;
-                    //   groupScaleTransform.ScaleZ = s;
-                    groupRotateTransform.CenterX = 5;
-                    groupRotateTransform.CenterY = 5;
-                    groupRotateTransform.CenterZ = 0;
-                    groupRotateTransform.Rotation = new AxisAngleRotation3D(q.Axis, q.Angle);
-                  //  groupTranslateTransform.OffsetX = t.X;
-                  //  groupTranslateTransform.OffsetY = t.Y;
-                  //  groupTranslateTransform.OffsetZ = t.Z;
+                    var angleY = (rotateY.Angle + -translateX) % 360;
+                    var angleX = (rotateX.Angle + translateY) % 360;
+                  //  if (-65 < angleY && angleY < 65)
+                   // {
+                        rotateY.Angle = angleY;
+                    //}
+                   // if (-65 < angleX && angleX < 65)
+                   // {
+                        rotateX.Angle = angleX;
+                   // }
+                    start = end;
 
                 }
                 else
                 {
-                    Point end = e.GetPosition(window);
-                    double offsetX = end.X - start.X;
-                    double offsetY = end.Y - start.Y;
-                    double w = window.Width;
-                    double h = window.Height;
-                    double translateX = (offsetX * 100) / w;
-                    double translateY = -(offsetY * 100) / h;
+                    
                     translate.OffsetX = diffOffset.X + (translateX / (100 * scale.ScaleX));
                     translate.OffsetY = diffOffset.Y + (translateY / (100 * scale.ScaleX));
                     translate.OffsetZ = translate.OffsetZ;
