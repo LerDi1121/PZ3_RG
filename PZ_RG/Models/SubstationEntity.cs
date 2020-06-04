@@ -13,5 +13,11 @@ namespace RG_PZ2.Models
         {
             return Brushes.Red;
         }
+        public override string ToString()
+        {
+            string retVal;
+            retVal = $"TYPE: {(this.GetType().Name)} \nID:{(Id)}\nName:{(Name)}";
+            return retVal;
+        }
     }
 }

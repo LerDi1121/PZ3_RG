@@ -11,13 +11,17 @@ using System.Collections.Generic;
 
 namespace PZ_RG.Service
 {
-
+    /// <summary>
+    /// Kreiranje objekata za prikaz
+    /// Kreiranje "Kocki"
+    /// Kreiranje linija za vodove
+    /// </summary>
     static class Object3DService
     {
         const  double HEIGHT =0.06;
         public static GeometryModel3D Create3Delement(PowerEntity entity, Model3DGroup model3DGroup, double size=HEIGHT)
         {
-            double   entityZ = 0.1;
+            double   entityZ = 0.04;
             var mesh = new MeshGeometry3D();
             Point3DCollection PositionCollection = new Point3DCollection();
             PositionCollection.Add(new Point3D(entity.X, entity.Y, entityZ));//donji deo
@@ -32,7 +36,7 @@ namespace PZ_RG.Service
             mesh.Positions = PositionCollection;
             foreach (var item in model3DGroup.Children)
             {
-                while (mesh.Bounds.IntersectsWith(item.Bounds))//da li je neki obj u "dodiru sa tim nasim"
+                while (mesh.Bounds.IntersectsWith(item.Bounds))//da li je neki obj u "dodiru" sa tim nasim
                 {
                     for (var i = 0; i < mesh.Positions.Count; i++)
                     {
@@ -89,7 +93,7 @@ namespace PZ_RG.Service
             var material = new DiffuseMaterial(entity.SetDefaultColor());
     
             var model = new GeometryModel3D(mesh, material);
-            model.SetValue(FrameworkElement.TagProperty, entity);
+            model.SetValue(FrameworkElement.TagProperty, entity);//dodavanje ojekta za" posle"
 
                        return model;
         }
@@ -98,14 +102,28 @@ namespace PZ_RG.Service
             HashSet<GeometryModel3D> Line = new HashSet<GeometryModel3D>();
             for(int i =0; i<entity.Vertices.Count-1;i++)
             {
-                Line.Add(CreateLine(entity.Vertices[i], entity.Vertices[i + 1], Brushes.Red));
+                Line.Add(CreateLine(entity.Vertices[i], entity.Vertices[i + 1], CreateBrush(entity.ConductorMaterial),entity));
             }
             return Line;
-            
 
 
         }
-        private static GeometryModel3D CreateLine(Point3D start, Point3D end, Brush brush)
+        private static Brush CreateBrush(string material)
+        {
+            switch(material)
+            {
+                case "Steel":
+                return Brushes.LightPink;
+                case "Copper":
+                    return Brushes.Gold;
+                case "Acsr":
+                    return Brushes.LightSlateGray;
+                default :
+                return Brushes.Black;
+               
+            }
+        }
+        private static GeometryModel3D CreateLine(Point3D start, Point3D end, Brush brush, LineEntity entity)
         {
             double size = HEIGHT /2;
             double entityZ = 0.03;
@@ -115,29 +133,73 @@ namespace PZ_RG.Service
             PositionCollection.Add(new Point3D(start.X + size, start.Y, entityZ));
             PositionCollection.Add(new Point3D(end.X , end.Y, entityZ));
             PositionCollection.Add(new Point3D(end.X +size, end.Y, entityZ));
+            PositionCollection.Add(new Point3D(start.X +(size/2), start.Y, entityZ+size));
+            PositionCollection.Add(new Point3D(end.X +(size/2), end.Y, entityZ+size));
             mesh.Positions = PositionCollection;
-
+            //pravlljenje prizme za liniju, da bi se videla iz svakog ugla 
+            //problem je nastao sto se prilikom rotacije neke linije vodova pojavljuju/nestaju (renderuju)
+            //zbog ugla normale elementa i normale kamere...
+            //resenje sam nasao u pravljenu "duplog" elementa za prikaz, tako se u svakom trenutku rendenuje vod, tj prizma
             Int32Collection TriangleCollection = new Int32Collection();
             //u jednom smeru
             TriangleCollection.Add(0);
             TriangleCollection.Add(2);
-            TriangleCollection.Add(1);
+            TriangleCollection.Add(4);
+
+            TriangleCollection.Add(4);
+            TriangleCollection.Add(2);
+            TriangleCollection.Add(5);
+            
             TriangleCollection.Add(2);
             TriangleCollection.Add(3);
+            TriangleCollection.Add(5);
+            
             TriangleCollection.Add(1);
-            //u drugom smeru
+            TriangleCollection.Add(3);
+            TriangleCollection.Add(5);
+            
+            TriangleCollection.Add(4);
+            TriangleCollection.Add(5);
+            TriangleCollection.Add(1);
+            
+            TriangleCollection.Add(1);
+            TriangleCollection.Add(4);
             TriangleCollection.Add(0);
-            TriangleCollection.Add(1);
+            //u drugom smeru zbog ugla gledanja
+            TriangleCollection.Add(0);
+            TriangleCollection.Add(4);
             TriangleCollection.Add(2);
+
+            TriangleCollection.Add(4);
+            TriangleCollection.Add(5);
             TriangleCollection.Add(2);
-            TriangleCollection.Add(1);
+
+            TriangleCollection.Add(2);
+            TriangleCollection.Add(5);
             TriangleCollection.Add(3);
+
+            TriangleCollection.Add(1);
+            TriangleCollection.Add(5);
+            TriangleCollection.Add(3);
+
+            TriangleCollection.Add(4);
+            TriangleCollection.Add(1);
+            TriangleCollection.Add(5);
+
+            TriangleCollection.Add(1);
+            TriangleCollection.Add(0);
+            TriangleCollection.Add(4);
+
             mesh.TriangleIndices = TriangleCollection;
 
             var material = new DiffuseMaterial(brush);
 
             var model = new GeometryModel3D(mesh, material);
+            model.SetValue(FrameworkElement.TagProperty, entity);
             return model;
         }
     }
 }
+/********
+ *Selenic Branislav PR132/2016
+ ********/

@@ -14,5 +14,11 @@ namespace RG_PZ2.Models
         {
             return Brushes.DeepSkyBlue;
         }
+        public override string ToString()
+        {
+            string retVal;
+            retVal = $"TYPE: {(this.GetType().Name)} \nID:{(Id)}\nName:{(Name)}\nStatus{(Status)}";
+            return retVal;
+        }
     }
 }

@@ -6,12 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Automation.Peers;
+using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 using System.Xml;
 
 namespace PZ_RG.Service
-{
+{/// <summary>
+/// Citanje iz fajla
+/// parsiranje 
+/// crtanje na scenu
+/// </summary>
     static class Common
     {
    
@@ -69,7 +74,9 @@ namespace PZ_RG.Service
                 }
             }
         }
-         public static void ConverLatLon()
+    
+        #region XMLHandle
+        public static void ConverLatLon()
         {
             foreach (var sub in substationEntities.Values)
             {
@@ -97,7 +104,6 @@ namespace PZ_RG.Service
             }
 
         }
-
         
         public static void AddEntities<T>(Dictionary<long,T> entities, XmlNodeList nodeList) where T : PowerEntity, new()
         {
@@ -211,6 +217,10 @@ namespace PZ_RG.Service
             longitude = (delt * (180.0 / Math.PI)) + s + diflon;
             latitude = ((lat + ((1 + (e2cuadrada * Math.Pow(Math.Cos(lat), 2)) - (3.0 / 2.0 * e2cuadrada * Math.Sin(lat) * Math.Cos(lat) * (tao - lat))) * (tao - lat))) * (180.0 / Math.PI)) + diflat;
         }
-    
+        #endregion
+
+    }
 }
-}
+/********
+ *Selenic Branislav PR132/2016
+ ********/

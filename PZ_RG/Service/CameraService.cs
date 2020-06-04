@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RG_PZ2.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
 
 namespace PZ_RG.Service
-{
+{/// <summary>
+/// Promena pozicije i ugla kamere i scene
+/// </summary>
     public class CameraService
     {
         private Point start = new Point();
@@ -18,13 +22,10 @@ namespace PZ_RG.Service
          private Quaternion rotationDelta;
         private Quaternion rotation;
         private int zoomMaxIn = 16;
-        private int zoomMaxOut =- 8;
-        
+        private int zoomMaxOut =- 8; 
         private int zoomCurent = 1;
         private bool rotating;
-
         Window window;
-
         Viewport3D viewport;
         ScaleTransform3D scale;
         TranslateTransform3D translate;
@@ -34,15 +35,14 @@ namespace PZ_RG.Service
         {
             this.viewport = viewport;
             this.window = window;
-
             this.scale = scale;
-          this. translate = translate;
+            this. translate = translate;
             rotationDelta = Quaternion.Identity;
             this.rotateX = rotateX;
             this.rotateY = rotateY;
             this.rotation = new Quaternion(0, 0, 0, 1);
             init();
-        }
+           }
         void init()
         {
             viewport.MouseWheel+= MouseWheel;
@@ -51,11 +51,9 @@ namespace PZ_RG.Service
             viewport.MouseMove += MouseMove;
             viewport.MouseDown += MiddleButtonDown;
             viewport.MouseUp += MiddleButtonUp;
-
         }
-
-
-        private void MouseWheel(object sender, MouseWheelEventArgs e)//skrolovanje
+   
+        private void MouseWheel(object sender, MouseWheelEventArgs e)
         {
             double scaleX = 1;
             double scaleY = 1;
@@ -129,7 +127,6 @@ namespace PZ_RG.Service
                     }
 
                     start = end;
-
                 }
                 else
                 {
@@ -162,9 +159,9 @@ namespace PZ_RG.Service
                 rotating = false;
                 viewport.ReleaseMouseCapture();
             }
-
         }
-
-
     }
 }
+/********
+ *Selenic Branislav PR132/2016
+ ********/

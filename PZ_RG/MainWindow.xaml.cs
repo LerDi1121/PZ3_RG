@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 //Selenic Branislav PR132/2016
@@ -23,6 +24,7 @@ namespace PZ_RG
     public partial class MainWindow : Window
     {
         CameraService cameraService;
+        HitTestService hitTestService;
         public MainWindow()
         {
             InitializeComponent();
@@ -30,9 +32,11 @@ namespace PZ_RG
             Common.LoadModels();
             Common.ConverLatLon();
             Common.CreateElement(model3DGroup);
-
+            hitTestService = new HitTestService(mainViewport,model3DGroup,this);
         }
-
- 
+    
     }
-}
+}   
+        /********
+         *Selenic Branislav PR132/2016
+         ********/

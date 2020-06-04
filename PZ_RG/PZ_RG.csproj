@@ -62,6 +62,7 @@
     <Compile Include="Models\SwitchEntity.cs" />
     <Compile Include="Service\CameraService.cs" />
     <Compile Include="Service\Common.cs" />
+    <Compile Include="Service\HitTestService.cs" />
     <Compile Include="Service\Object3DService.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

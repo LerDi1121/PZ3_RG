@@ -17,6 +17,12 @@ namespace RG_PZ2.Models
         {
             return Brushes.Lime;
         }
+        public override string ToString()
+        {
+            string retVal;
+            retVal = $"TYPE: {(this.GetType().Name)} \nID:{(Id)}\nName:{(Name)}";
+            return retVal;
+        }
 
 
     }
