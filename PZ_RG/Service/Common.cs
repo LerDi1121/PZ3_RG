@@ -125,7 +125,7 @@ namespace PZ_RG.Service
             }
         }
 
-        public static void AddLineEntities(HashSet<LineEntity> entites, XmlNodeList nodeList)
+        public static void AddLineEntities(HashSet< LineEntity> entites, XmlNodeList nodeList)
         {
             foreach (XmlNode item in nodeList)
             {
@@ -147,14 +147,12 @@ namespace PZ_RG.Service
 
                 foreach (XmlNode point in item.SelectSingleNode("Vertices"))
                 {
-                    double x;
-                    double y;
-                ToLatLon(double.Parse(item.SelectSingleNode("X").InnerText, CultureInfo.InvariantCulture), double.Parse(item.SelectSingleNode("Y").InnerText, CultureInfo.InvariantCulture), 34, out  y, out  x);
+                    ToLatLon(double.Parse(point.SelectSingleNode("X").InnerText, CultureInfo.InvariantCulture), double.Parse(point.SelectSingleNode("Y").InnerText, CultureInfo.InvariantCulture), 34, out var y, out var x);
 
-                if (!(MIN_LAT <= y && y <= MAX_LAT) || !(MIN_LON <= x && x <= MAX_LON))
-                {
-                    continue;
-                }
+                    if (!(MIN_LAT <= y && y <= MAX_LAT) || !(MIN_LON <= x && x <= MAX_LON))
+                    {
+                        continue;
+                    }
                     line.Vertices.Add(new Point3D()
                     {
                         X = x,
@@ -164,7 +162,7 @@ namespace PZ_RG.Service
 
                 }
 
-                entites.Add(line);
+                entites.Add( line);
             }
         }
 
