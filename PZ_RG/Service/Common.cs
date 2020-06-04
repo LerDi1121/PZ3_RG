@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Automation.Peers;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 using System.Xml;
@@ -23,7 +24,7 @@ namespace PZ_RG.Service
         public static Dictionary<long, SubstationEntity> substationEntities = new Dictionary<long, SubstationEntity>();
         public static Dictionary<long, NodeEntity> nodeEntities = new Dictionary<long, NodeEntity>();
         public static Dictionary<long, SwitchEntity> switchEntities = new Dictionary<long, SwitchEntity>();
-        public static Dictionary<long, LineEntity> lineEntities = new Dictionary<long, LineEntity>();
+        public static HashSet< LineEntity> lineEntities = new HashSet< LineEntity>();
         private static double ScaleY;
         private static double ScaleX;
 
@@ -59,6 +60,14 @@ namespace PZ_RG.Service
                 // Object3DService.Create3Delement(item, model3DGroup);
                 model3DGroup.Children.Add(Object3DService.Create3Delement(item, model3DGroup));
             }
+            foreach (var line in lineEntities)
+            {
+                ICollection<GeometryModel3D> lines = Object3DService.CreateLines(line);
+                foreach(var item in lines)
+                {
+                    model3DGroup.Children.Add(item);
+                }
+            }
         }
          public static void ConverLatLon()
         {
@@ -78,11 +87,11 @@ namespace PZ_RG.Service
                 swc.Y = Convert(swc.Y, MIN_LAT, ScaleY);
                 swc.X = Convert(swc.X, MIN_LON, ScaleX);
             }
-            foreach (var line in lineEntities.Values)
+            foreach (var line in lineEntities)
             {
                 for( int i =0; i< line.Vertices.Count;i++)
                 {
-                    line.Vertices[i]= new Point3D(Convert(line.Vertices[i].Y, MIN_LON, ScaleX), Convert(line.Vertices[i].X, MIN_LON, ScaleY), line.Vertices[i].Z);
+                    line.Vertices[i]= new Point3D(Convert(line.Vertices[i].X, MIN_LON, ScaleX), Convert(line.Vertices[i].Y, MIN_LAT, ScaleY), line.Vertices[i].Z);
                 }
 
             }
@@ -116,7 +125,7 @@ namespace PZ_RG.Service
             }
         }
 
-        public static void AddLineEntities(Dictionary<long,LineEntity> entites, XmlNodeList nodeList)
+        public static void AddLineEntities(HashSet<LineEntity> entites, XmlNodeList nodeList)
         {
             foreach (XmlNode item in nodeList)
             {
@@ -138,12 +147,14 @@ namespace PZ_RG.Service
 
                 foreach (XmlNode point in item.SelectSingleNode("Vertices"))
                 {
-                    ToLatLon(double.Parse(point.SelectSingleNode("X").InnerText, CultureInfo.InvariantCulture), double.Parse(point.SelectSingleNode("Y").InnerText, CultureInfo.InvariantCulture), 34, out var y, out var x);
+                    double x;
+                    double y;
+                ToLatLon(double.Parse(item.SelectSingleNode("X").InnerText, CultureInfo.InvariantCulture), double.Parse(item.SelectSingleNode("Y").InnerText, CultureInfo.InvariantCulture), 34, out  y, out  x);
 
-                    if (!(MIN_LAT <= y && y <= MAX_LAT) || !(MIN_LON <= x && x <= MAX_LON))
-                    {
-                        continue;
-                    }
+                if (!(MIN_LAT <= y && y <= MAX_LAT) || !(MIN_LON <= x && x <= MAX_LON))
+                {
+                    continue;
+                }
                     line.Vertices.Add(new Point3D()
                     {
                         X = x,
@@ -153,7 +164,7 @@ namespace PZ_RG.Service
 
                 }
 
-                entites.Add(line.Id,line);
+                entites.Add(line);
             }
         }
 

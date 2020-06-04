@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Background="Beige">
-          <ScrollViewer  Name="scrollViewer" HorizontalScrollBarVisibility="Hidden"  VerticalScrollBarVisibility="Hidden">
+         
             
             <Viewport3D Name="mainViewport" ClipToBounds="True" Height="700" Width="1000" >
                
@@ -88,7 +88,7 @@
                 </ModelVisual3D>
 
             </Viewport3D>
-        </ScrollViewer>
+      
         
         </Grid>
 </Window>

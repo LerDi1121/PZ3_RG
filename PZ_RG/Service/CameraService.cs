@@ -17,7 +17,9 @@ namespace PZ_RG.Service
         private Point diffOffset = new Point(); 
          private Quaternion rotationDelta;
         private Quaternion rotation;
-        private int zoomMax = 10;
+        private int zoomMaxIn = 16;
+        private int zoomMaxOut =- 8;
+        
         private int zoomCurent = 1;
         private bool rotating;
 
@@ -55,24 +57,36 @@ namespace PZ_RG.Service
 
         private void MouseWheel(object sender, MouseWheelEventArgs e)//skrolovanje
         {
-            Point p = e.MouseDevice.GetPosition(window);
             double scaleX = 1;
             double scaleY = 1;
-            if (e.Delta > 0 && zoomCurent < zoomMax)
+            double scaleZ = 1;
+            if (e.Delta > 0 && zoomCurent < zoomMaxIn)
             {
                 scaleX = scale.ScaleX + 0.1;
                 scaleY = scale.ScaleY + 0.1;
-                zoomCurent++;
+                scaleZ = scale.ScaleZ + 0.1;
+                scale.CenterX = 5;
+                scale.CenterY = 5;
+                scale.CenterZ = 0;
                 scale.ScaleX = scaleX;
                 scale.ScaleY = scaleY;
+                scale.ScaleZ = scaleZ;
+                zoomCurent++;
+
             }
-            else if (e.Delta <= 0 && zoomCurent > -zoomMax)
+            else if (e.Delta <= 0 && zoomCurent > zoomMaxOut)
             {
                 scaleX = scale.ScaleX - 0.1;
                 scaleY = scale.ScaleY - 0.1;
-                zoomCurent--;
+                scaleZ = scale.ScaleZ - 0.1;
+                scale.CenterX = 5;
+                scale.CenterY = 5;
+                scale.CenterZ = 0;
                 scale.ScaleX = scaleX;
                 scale.ScaleY = scaleY;
+                scale.ScaleZ = scaleZ;
+                zoomCurent--;
+
             }
         }
         private void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -105,11 +119,11 @@ namespace PZ_RG.Service
                 {
                     var angleY = (rotateY.Angle + -translateX) % 360;
                     var angleX = (rotateX.Angle + translateY) % 360;
-                    if (-80 < angleY && angleY <80)
+                    if (-75 < angleY && angleY <75)
                     {
                         rotateY.Angle = angleY;
                     }
-                    if (-20 < angleX && angleX < 135)
+                    if (-20 < angleX && angleX < 125)
                     {
                         rotateX.Angle = angleX;
                     }
